@@ -1,4 +1,4 @@
-﻿/*-------------------------------------------------------------------------------------------
+/*-------------------------------------------------------------------------------------------
 
 Thanks to Erik Kay and Mike Belshe from the Google Chrome engineering team who originally
 wrote the below sorting test. This test is a great way to experience the patterns across
@@ -151,19 +151,11 @@ Sort.prototype.reset = function () {
     this.print();
 }
 
-Sort.prototype.startSetTimeout15 = function () {
-    this.useSetImmediate = false;
-    this.interval_time = 15;
-    this.results = document.getElementById("HTML4TestResuts");
-    this.powerConsumption = "<span style='color:green;'>Standard</span>";
-    this.CPUEfficency = "<span style='color:red;'>Low</span>";
-    this.reset();
-    this.start();
-}
+
 
 Sort.prototype.startSetTimeout0 = function () {
     this.useSetImmediate = false;
-    this.interval_time = 4;
+    this.useImmediate = false;
     this.results = document.getElementById("HTML5TestResults");
     this.powerConsumption = "<span style='color:red;'>High</span>";
     this.CPUEfficency = "<span style='color:orange;'>Medium</span>";
@@ -172,8 +164,8 @@ Sort.prototype.startSetTimeout0 = function () {
 }
 
 Sort.prototype.startSetImmediate = function () {
+    this.useImmediate = false;
     this.useSetImmediate = true;
-    this.interval_time = 4;
     this.results = document.getElementById("setImmediateTestResults");
     this.powerConsumption = "<span style='color:green;'>Low</span>";
     this.CPUEfficency = "<span style='color:green;'>High</span>";
@@ -188,7 +180,18 @@ Sort.prototype.startSetImmediate = function () {
     }
 
 }
+Sort.prototype.startImmediate = function () {
+    this.useImmediate = true;
+    this.useSetImmediate = false;
+    this.results = document.getElementById("immediateTestResults");
+    this.powerConsumption = "<span style='color:green;'>Low</span>";
+    this.CPUEfficency = "<span style='color:green;'>High</span>";
+    this.reset();
 
+        this.start();
+    
+
+}
 Sort.prototype.start = function () {
     if (this.start_time > 0) {
         if (this.stop_time > 0) {
@@ -245,6 +248,8 @@ Sort.prototype.registerCallback = function () {
         {
             this.timer = OSetImmediate(function () { t.stepper(); });
         }
+    }else if(this.useImmediate){
+        this.timer = immediate(function () { t.stepper(); });
     }
     else {
         this.timer = setTimeout(function () { t.stepper(); }, this.interval_time);
